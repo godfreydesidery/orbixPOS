@@ -37,6 +37,21 @@ export class CartService {
   destroyCart(){
     
   }
+  destroyLocalCart(cart : any){
+    cart = null
+
+    return cart
+  }
+  checkIfCartExist(till : any){
+    var exist : boolean = false
+
+    return exist
+  }
+  loadOldCart(till : any){
+    var cart : any = null
+
+    return cart
+  }
 
 
 }
