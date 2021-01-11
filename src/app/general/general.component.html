@@ -39,218 +39,52 @@
                                 <td style="position: sticky; top: 0; background-color: blanchedalmond;"><b>Void</b></td>
                             </tr>
                         </thead>
-                        <!--<table id="data-table" style="font-size: 13px;display: block; height: 150px; width: 100%; overflow-y: auto;overflow-x: auto;"  class="table table-bordered table-striped table-condensed data-table table-hover table-responsive">-->
 
                         <tbody>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                            <tr *ngFor="let detail of cartDetails" [ngValue]="detail" style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
+                                <td style="background-color: rgb(187, 183, 183);">01></td>
+                                <td><input [(ngModel)]="detail.barcode" readonly  type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input [(ngModel)]="detail.itemCode" readonly type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input [(ngModel)]="detail.description" readonly type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input [(ngModel)]="detail.price" readonly type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
+                                <td><input [(ngModel)]="detail.vat" readonly type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
+                                <td><input [(ngModel)]="detail.discount" readonly type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
+                                <td><input [(ngModel)]="detail.qty" type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td style="text-align: right; width: 25mm;">{{detail.amount|currency:'TSh':''}}</td>
+                                <td><input [(ngModel)]="detail.void" type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                            </tr>
+                            <tr style="height: 3px; background-color: grey;">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td style="background-color: rgb(187, 183, 183);">-></td>
+                                <td><input type="text" [(ngModel)]="barcode" (keydown.enter)="searchByBarcode()"  style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input type="text" [(ngModel)]="itemCode" (keydown.enter)="searchByItemCode()"  style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input type="text" [(ngModel)]="description" list="description" (keydown.enter)="searchByDescription()" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input readonly type="text" [(ngModel)]="price" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
+                                <td><input readonly type="text" [(ngModel)]="vat" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
+                                <td><input readonly type="text" [(ngModel)]="discount" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
                                 <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
+                                <td style="text-align: right; width: 25mm;"></td>
                                 <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
                             </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
-                                <td style="background-color: rgb(187, 183, 183);">999</td>
-                                <td><input type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
-                                <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                            </tr>
-                            
-                            
-                            
                         </tbody>
+                        
                     </table>
+                    <datalist id="description" style="padding: 0px;">
+                        <option *ngFor="let d of descriptions" [ngValue]="d">{{d}}</option>
+                    </datalist>
+                    <!--{{ cartDetails | json }}-->
                 </td>
                 <td style="vertical-align: top; align-content: right;">
                     <table>
