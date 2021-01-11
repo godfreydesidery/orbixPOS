@@ -13,34 +13,21 @@ declare var $: any;
 })
 export class GeneralComponent implements OnInit {
 
-  itemId : any
-  barcode : string
-  itemCode : string
-  description : string
-  price : number
-  vat : number
-  discount : number
-  qty : number
-  amount : number
-  void : boolean
-
-
  public descriptions : any = []
-
 
   /**
    * Till information
    */
-  tillId : any = null
+  till : Till = null
 
   /**
    * Cart information
    */
-  public cartId : any = 1
+  public cart : Cart = null
 
-  public cartDetails : any ={}
+  public cartDetails : CartDetail [] = []
 
-  public cartDetailsSyncronizer : any = {}
+  public cartDetailsSyncronizer : CartDetail [] = []
 
   /**
    * Sale information
@@ -54,147 +41,27 @@ export class GeneralComponent implements OnInit {
 
 
 
+
+
+
+  /**
+   * The current item
+   */
+  itemId      : any
+  barcode     : string
+  itemCode    : string
+  description : string
+  price       : number
+  vat         : number
+  discount    : number
+  qty         : number
+  amount      : number
+  void        : boolean
+
   constructor(private cartService : CartService, private httpClient : HttpClient) { }
 
   async ngOnInit(): Promise<void> {
     this.loadItemDescriptions()
-
-    this.cartDetails = [
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      },
-      { cartId : this.cartId,
-        id : 1,
-        barcode : '64536748575',
-        itemCode : '64534',
-        description : 'KILIMANJARO PURE DRINKING WATER 1500 ML PET',
-        price : 1500,
-        vat : 18,
-        discount : 0.00,
-        qty : 2,
-        amount : 3000,
-        void : false
-      }
-      
-    ]
-     
 
     /**
      * Destroys any existing local cart
@@ -203,16 +70,10 @@ export class GeneralComponent implements OnInit {
      * Create a new cart if old cart has been deleted
      */
 
-
-
-
-
-
-
-     
-    
   }
+  
   clear(){
+    this.itemId = ''
     this.barcode ='' 
     this.itemCode  =''
     this.description ='' 
@@ -221,35 +82,34 @@ export class GeneralComponent implements OnInit {
     this.discount =null
     this.qty =null
     this.amount =null
+    this.void = false
   }
-  searchByBarcode(){
+  searchByBarcode(value : any){
     this.itemCode =''
     this.description = ''
     this.price=null
     this.vat=null
     this.discount=null
     this.qty=null
-    this.searchItem(this.barcode,this.itemCode,this.description)
-    
+    this.searchItem(value, '', '')
   }
-  searchByItemCode(){
+  searchByItemCode(value : any){
     this.barcode =''
     this.description = ''
     this.price=null
     this.vat=null
     this.discount=null
     this.qty=null
-    this.searchItem(this.barcode,this.itemCode,this.description)
+    this.searchItem('', value, '')
   }
-  searchByDescription(){
+  searchByDescription(value : any){
     this.barcode =''
     this.itemCode =''
     this.price=null
     this.vat=null
     this.discount=null
     this.qty=null
-
-    this.searchItem(this.barcode,this.itemCode,this.description)
+    this.searchItem('', '', value)
   }
 
   async searchItem(barcode : string, itemCode : string, description : string){
@@ -260,6 +120,9 @@ export class GeneralComponent implements OnInit {
       var item = await (new ItemService(this.httpClient).getItem(itemId))
       this.itemId = itemId
       found = true
+      if(barcode != ''){
+        this.barcode = item['primaryBarcode']
+      }
 			this.itemCode = item['itemCode']
 			this.description = item['longDescription']
       this.price = item['unitRetailPrice']
@@ -271,70 +134,85 @@ export class GeneralComponent implements OnInit {
       this.itemId = ''
     }
     if(found == true){
-      this.postDetail('', this.itemId, this.itemCode, this.description, this.price, this.vat, this.discount, this.qty)
+      this.postDetail('', this.itemId, this.barcode, this.itemCode, this.description, this.price, this.vat, this.discount, this.qty)
     }
   }
-  async postDetail(detailId : any, itemId : any, itemCode : string, description : string, price : number, vat : number, discount : number, qty : number){
-   var detail = {
-     cartId : this.cartId,
-     itemId : itemId,
-     itemCode : itemCode,
-     description : description,
-     price : price,
-     vat : vat,
-     discount : discount,
-     qty : qty
-   } 
+  async postDetail(detailId : any, itemId : any,barcode : any, itemCode : string, description : string, price : number, vat : number, discount : number, qty : number){
+    var detail = new CartDetail()
+    detail.cart.id = this.cart.id
+    detail.itemId = itemId
+    detail.itemCode = itemCode
+    detail.description = description
+    detail.price = price
+    detail.vat = vat
+    detail.discount = discount
+    detail.qty = qty
    await this.httpClient.post(Data.baseUrl+"/cart_details", detail)
    .toPromise()
    .then(
      data => {
        var id = data['id']
-       this.pushDetail(id, itemId,itemCode,description,price,vat,discount,qty )
+       this.pushDetail(id, itemId, barcode, itemCode, description, price, vat, discount, qty)
+     }
+   )
+   .catch(
+     error => {
+       this.rollBackCart()
      }
    )
 
   }
-  
-  pushDetail(detailId : any, itemId : any, itemCode : string, description : string, price : number, vat : number, discount : number, qty : number){
-    
-    var detail : Detail = new Detail()
-    detail.detailId = detailId
-    detail.barcode = this.barcode
+  pushDetail(detailId : any, itemId : any, barcode : any, itemCode : string, description : string, price : number, vat : number, discount : number, qty : number){
+    /**
+     * Puts the current item to cart
+     * If similar item s present in the cart, with the same state, ie, not voided
+     * increment, otherwise, adds the item to cart
+     */
+    var detail : CartDetail = new CartDetail()
+    detail.id = detailId
+    detail.itemId = itemId
+    detail.barcode = barcode
+    detail.itemCode = itemCode
+    detail.description = description
+    detail.price = price
+    detail.vat = vat
+    detail.qty = qty
+    detail.void = false
 
+    var present : boolean = false
     for(let cartDetail of this.cartDetails){
-      //if(cartDetail.detail)
-      
-
-     
+      if(cartDetail.id == detail.id){
+        //increment qty
+        cartDetail.qty = cartDetail.qty + detail.qty
+        present = true
+        break
+      }
     }
-
+    if(present == false){
+      //push detail
+      this.cartDetails.push(detail)
+    }
+    this.synchronizeCart()
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+  synchronizeCart(){
+  /**
+   * Synchronizes cart with cart synchronizer
+   */
+    this.cartDetailsSyncronizer = this.cartDetails
+  }
+  
+  rollBackCart(){
+  /**
+   * Revives a dirty cart to a previous clean state
+   */ 
+    this.cartDetails = this.cartDetailsSyncronizer
+  }
+  
   async loadItemDescriptions(){
+  /**
+   * Load items descriptions
+   */
     var values = null
     await this.httpClient.get(Data.baseUrl+"/items/long_descriptions")
     .toPromise()
@@ -352,26 +230,31 @@ export class GeneralComponent implements OnInit {
     })
   }
 
- 
-
-
-
-
-
-
-
-
-  
-
-  
- 
-  
-
- 
+}
+/**
+ * Till class
+ */
+class Till {
+  id : any
 
 }
-class Detail{
-  detailId : any
+/**
+ * Cart class
+ */
+class Cart {
+  id : any
+  name : any
+  status : any
+  dateTime : any
+  till : Till
+}
+/**
+ * Cart detail class
+ */
+class CartDetail{
+  id : any
+  cart : Cart
+  itemCode : any
   barcode : any
   itemId : any
   description : any
@@ -379,4 +262,18 @@ class Detail{
   vat : any
   discount : any
   qty : any
+  void : boolean
+}
+/**
+ * Sale class
+ */
+class Sale {
+
+}
+
+  /**
+ * Sale detail class
+ */
+class SaleDetail {
+
 }
