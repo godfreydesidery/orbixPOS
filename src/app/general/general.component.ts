@@ -20,6 +20,8 @@ export class GeneralComponent implements OnInit {
    */
   till : Till = null
 
+  tillName : string = 'SANILI TILL 1'
+
   /**
    * Cart information
    */
@@ -69,8 +71,54 @@ export class GeneralComponent implements OnInit {
      * Loads the cart if it exists, checks it and destroy it if it is empty,
      * Create a new cart if old cart has been deleted
      */
+    if(this.isNetworkAvailable() == false){
+      alert('No network')
+      this.cart = null
+    }else{
+      if(this.isCartAvailable() == true){
+        if(this.isEmpty() == true){
+          this.destroyCart()
+          this.createCart()
+        }
+      }else{
+        this.createCart()
+      }
+      this.cart = this.loadCart()
+    }
 
   }
+  isNetworkAvailable() : boolean{
+    var available : boolean = false
+
+    return available
+  }
+  isCartAvailable() : boolean{
+    var available = false
+    //
+    return available
+  }
+
+  isEmpty() : boolean{
+    var empty = false
+
+    return empty
+  }
+
+  destroyCart() : void{
+
+  }
+   createCart() : Cart{
+     var cart : Cart
+
+     return cart
+   }
+   loadCart() : Cart{
+     var cart : Cart
+
+     return cart
+   }
+
+
   
   clear(){
     this.itemId = ''
