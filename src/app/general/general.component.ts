@@ -185,7 +185,8 @@ export class GeneralComponent implements OnInit {
     )
     .catch(
       error => {
-
+        console.log(error()
+        )
       }
     )
   }
@@ -289,6 +290,7 @@ export class GeneralComponent implements OnInit {
       this.price = item['unitRetailPrice']
       this.vat = item['vat']
       this.discount = item['discount']
+      this.qty = 1
 		}else{
       /** */
       found = false
