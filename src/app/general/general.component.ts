@@ -18,14 +18,14 @@ export class GeneralComponent implements OnInit {
   /**
    * Till information
    */
-  till : Till = null
+  till : Till = new Till()
 
   tillName : string = 'SANILI TILL 1'
 
   /**
    * Cart information
    */
-  public cart : Cart = null
+  public cart : Cart = new Cart()
 
   public cartDetails : CartDetail [] = []
 
@@ -43,6 +43,7 @@ export class GeneralComponent implements OnInit {
 
 
 
+  computerName : string = 'SANILI TILL 1'
 
 
 
@@ -63,7 +64,7 @@ export class GeneralComponent implements OnInit {
   constructor(private cartService : CartService, private httpClient : HttpClient) { }
 
   async ngOnInit(): Promise<void> {
-    this.loadItemDescriptions()
+    
 
     /**
      * Destroys any existing local cart
@@ -71,50 +72,157 @@ export class GeneralComponent implements OnInit {
      * Loads the cart if it exists, checks it and destroy it if it is empty,
      * Create a new cart if old cart has been deleted
      */
-    if(this.isNetworkAvailable() == false){
-      alert('No network')
-      this.cart = null
-    }else{
-      if(this.isCartAvailable() == true){
-        if(this.isEmpty() == true){
-          this.destroyCart()
-          this.createCart()
-        }
-      }else{
-        this.createCart()
+
+     if(await this.isNetworkAvailable() == true){
+       var till = await this.loadTill(this.tillName)
+       if(till != null){
+         this.till = till
+         if(await this.isCartAvailable(till) == true){
+           if(await this.isEmpty(till) == true){
+             this.destroyCart(till)
+             this.createCart(till)
+           }
+         }else{
+           this.createCart(till)
+         }
+         var cart = await this.loadCart(till)
+         this.cart = cart
+       }else{
+         alert('Could not load till information')
+       }
+     }else{
+       this.till = null
+       this.cart = null
+       alert('Network error')
+     }
+
+     this.loadItemDescriptions()
+
+  }
+  async loadTill(tillName) : Promise<Till>{
+    var till : Till = new Till()
+    await this.httpClient.get(Data.baseUrl+"/tills/till_name="+tillName).toPromise()
+    .then(
+      data => {
+        till.id       = data['id']
+        till.tillNo   = data['tillNo']
+        till.tillName = data['tillName']
+        till.status   = data['status']
       }
-      this.cart = this.loadCart()
-    }
-
+    )
+    .catch(
+      error => {
+        till = null
+      }
+    )
+    return till
   }
-  isNetworkAvailable() : boolean{
+  async isNetworkAvailable() : Promise<boolean>{
     var available : boolean = false
-
+    await this.httpClient.get(Data.baseUrl+"/network_status").toPromise()
+    .then(
+      data => {
+        if(data == '1'){
+          available = true
+        }else if(data == 0){
+          available == false
+          alert('Database error')
+        }
+      }
+    )
+    .catch(
+      error => {
+        alert('Network error1')
+        available = false
+      }
+    )
+    
     return available
   }
-  isCartAvailable() : boolean{
+  async isCartAvailable(till : Till) : Promise<boolean>{
     var available = false
-    //
+    await this.httpClient.get(Data.baseUrl+"/carts/till_no="+till.tillNo).toPromise()
+    .then(
+      data => {
+        if(data['id'] != null && data['id'] != ''){
+          available = true
+        }else{
+          available = false
+        }
+        console.log(data)
+      }
+    )
+    .catch(
+      error => {
+        available = false
+      }
+    )
     return available
   }
 
-  isEmpty() : boolean{
-    var empty = false
-
+  async isEmpty(till : Till) : Promise<any>{
+    var empty : any = false
+    await this.httpClient.get(Data.baseUrl+"/carts/is_empty/till_no="+till.tillNo).toPromise()
+    .then(
+      data => {
+        empty = data
+      }
+    )
+    .catch(
+      error => {
+        empty = false
+      }
+    )
     return empty
   }
 
-  destroyCart() : void{
+  async destroyCart(till : Till) : Promise<void>{
+    await this.httpClient.delete(Data.baseUrl+"/carts/destroy/till_no="+till.tillNo).toPromise()
+    .then(
+      data => {
 
+      }
+    )
+    .catch(
+      error => {
+
+      }
+    )
   }
-   createCart() : Cart{
-     var cart : Cart
 
-     return cart
+   async createCart(till : Till) : Promise<boolean>{
+     var created : any = false
+     await this.httpClient.post(Data.baseUrl+"/carts/create", till).toPromise()
+     .then(
+       data => {
+         created = data
+       }
+     )
+     .catch(
+       error => {
+         console.log(error)
+         created = false
+       }
+     )
+     return created
    }
-   loadCart() : Cart{
-     var cart : Cart
-
+   async loadCart(till : Till) : Promise<Cart>{
+     var cart : Cart = new  Cart()
+     await this.httpClient.get(Data.baseUrl+"/carts/till_no="+till.tillNo).toPromise()
+     .then(
+       data => {
+         cart.id        = data['id']
+         cart.name      = data['name']
+         cart.status    = data['status']
+         cart.dateTime  = data['dateTime']
+         cart.till      = data['till']
+       }
+     )
+     .catch(
+       error => {
+         cart = null
+       }
+     )
      return cart
    }
 
@@ -161,6 +269,11 @@ export class GeneralComponent implements OnInit {
   }
 
   async searchItem(barcode : string, itemCode : string, description : string){
+    if(this.till == null){
+      alert('Operation failed. Till information not found')
+      this.clear()
+      return
+    }
     var found = false
 		/**Search and display an item */
 		var itemId = await (new ItemService(this.httpClient).getItemId(barcode , itemCode, description))
@@ -283,7 +396,11 @@ export class GeneralComponent implements OnInit {
  * Till class
  */
 class Till {
-  id : any
+  id           : any
+  tillNo       : string
+  tillName     : string
+  computerName : string
+  status       : string
 
 }
 /**
@@ -295,6 +412,7 @@ class Cart {
   status : any
   dateTime : any
   till : Till
+  
 }
 /**
  * Cart detail class

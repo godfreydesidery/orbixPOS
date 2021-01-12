@@ -34,6 +34,7 @@ export class ItemService {
     )
     .catch(
       error=>{
+        console.log(error)
         alert(error['error'])
       }
     )
@@ -83,7 +84,9 @@ export class ItemService {
       )
       .catch(
         error=>{
+          alert(error['message'])
           alert(error['error'])
+
         }
       )
     }
