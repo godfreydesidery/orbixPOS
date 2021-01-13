@@ -13,6 +13,8 @@ declare var $: any;
 })
 export class GeneralComponent implements OnInit {
 
+  addMany : boolean = true
+
  public descriptions : any = []
 
   /**
@@ -53,16 +55,17 @@ export class GeneralComponent implements OnInit {
    * The current item
    */
   cartDetail : CartDetail = new CartDetail()
-  //itemId      : any
-  //barcode     : string
-  //itemCode    : string
-  //description : string
-  //price       : number
-  //vat         : number
-  //discount    : number
-  //qty         : number
-  //amount      : number
-  //void        : boolean
+
+  itemId : any = null
+  barcode     : string
+  itemCode    : string
+  description : string
+  price       : number
+  vat         : number
+  discount    : number
+  quantity    : number
+  amount      : number
+  voided      : boolean
 
   constructor(private cartService : CartService, private httpClient : HttpClient) { }
 
@@ -267,15 +270,16 @@ export class GeneralComponent implements OnInit {
 
   
   clear(){
-    this.cartDetail.barcode ='' 
-    this.cartDetail.itemCode  =''
-    this.cartDetail.description ='' 
-    this.cartDetail.price = null
-    this.cartDetail.vat =null
-    this.cartDetail.discount =null
-    this.cartDetail.quantity =null
-    this.cartDetail.amount =null
-    this.cartDetail.voided = false
+    this.itemId = null
+    this.barcode ='' 
+    this.itemCode  =''
+    this.description ='' 
+    this.price = null
+    this.vat =null
+    this.discount =null
+    this.quantity =null
+    this.amount =null
+    this.voided = false
   }
   searchByBarcode(value : any){
     this.cartDetail.itemCode =''
@@ -315,6 +319,7 @@ export class GeneralComponent implements OnInit {
 		/**Search and display an item */
 		var itemId = await (new ItemService(this.httpClient).getItemId(barcode , itemCode, description))
 		if(itemId != '' && itemId !=null){
+      this.itemId = itemId
       var item = await (new ItemService(this.httpClient).getItem(itemId))
       found = true
       if(barcode != ''){
@@ -325,17 +330,45 @@ export class GeneralComponent implements OnInit {
       this.cartDetail.price = item['unitRetailPrice']
       this.cartDetail.vat = item['vat']
       this.cartDetail.discount = item['discount']
-      this.cartDetail.quantity = 1
+
+
+      //this.cartDetail.quantity = this.quantity
+
+      this.barcode     = this.cartDetail.barcode
+      this.itemCode    = this.cartDetail.itemCode
+      this.description = this.cartDetail.description
+      this.price       = this.cartDetail.price
+      this.vat         = this.cartDetail.vat
+      this.discount    = this.cartDetail.discount
+      this.amount      = this.cartDetail.amount
+      this.voided      = this.cartDetail.voided
+
+
 		}else{
       /** */
       found = false
     }
     if(found == true){
-      console.log(this.cart)
-      var detail = await this.postDetail('', this.cart, this.cartDetail.barcode, this.cartDetail.itemCode, this.cartDetail.description, this.cartDetail.price, this.cartDetail.vat, this.cartDetail.discount, this.cartDetail.quantity)
-      if(detail != null){
-        this.pushDetail(detail)
+      if(this.addMany == false){
+        this.addToCart()
       }
+    }
+  }
+  validateInputs(cartDetail : CartDetail) : boolean{
+    var valid : boolean = true
+    if(this.quantity <= 0 || isNaN(this.quantity) || this.quantity % 1 !=0){
+      valid = false
+      alert('Invalid inputs')
+    }
+
+    return valid
+  }
+  async addToCart(){
+    if(this.validateInputs(this.cartDetail) == false){
+      return;
+    }
+    if(this.itemId != null){
+      await this.postDetail('', this.cart, this.cartDetail.barcode, this.cartDetail.itemCode, this.cartDetail.description, this.cartDetail.price, this.cartDetail.vat, this.cartDetail.discount, this.quantity)
     }
   }
   async postDetail(detailId : any, cart : Cart, barcode : any, itemCode : string, description : string, price : number, vat : number, discount : number, quantity : number) : Promise<CartDetail>{
@@ -364,6 +397,15 @@ export class GeneralComponent implements OnInit {
        detail.vat = data['vat']
        detail.discount = data['discount']
        detail.quantity = data['quantity']
+       console.log(data['price'])
+       console.log(data['quantity'])
+       detail = detail
+       console.log(detail)
+
+       this.pushDetail(detail)
+       
+
+
      }
    )
    .catch(
@@ -374,6 +416,7 @@ export class GeneralComponent implements OnInit {
        this.rollBackCart()
      }
    )
+   console.log(detail)
    return detail
   }
   pushDetail(detail : CartDetail){
@@ -384,10 +427,10 @@ export class GeneralComponent implements OnInit {
      */
     detail.voided = false
     var present : boolean = false
+    //detail.quantity = this.cartDetail.quantity
     for(let cartDetail of this.cartDetails){
       if(cartDetail.id == detail.id){
-        //increment qty
-        cartDetail.quantity = cartDetail.quantity + detail.quantity
+        cartDetail.quantity = detail.quantity
         present = true
         break
       }
@@ -396,6 +439,7 @@ export class GeneralComponent implements OnInit {
       //push detail
       this.cartDetails.push(detail)
     }
+    this.clear()
     this.synchronizeCart()
   }
   
@@ -470,7 +514,7 @@ class CartDetail{
   price : any
   vat : any
   discount : any
-  quantity : any
+  quantity : number
   amount : any
   voided : boolean
 }
