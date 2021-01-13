@@ -27,6 +27,8 @@ export class GeneralComponent implements OnInit {
    */
   public cart : Cart = new Cart()
 
+  public item : Item = new Item()
+
   public cartDetails : CartDetail [] = []
 
   public cartDetailsSyncronizer : CartDetail [] = []
@@ -50,16 +52,17 @@ export class GeneralComponent implements OnInit {
   /**
    * The current item
    */
-  itemId      : any
-  barcode     : string
-  itemCode    : string
-  description : string
-  price       : number
-  vat         : number
-  discount    : number
-  qty         : number
-  amount      : number
-  void        : boolean
+  cartDetail : CartDetail = new CartDetail()
+  //itemId      : any
+  //barcode     : string
+  //itemCode    : string
+  //description : string
+  //price       : number
+  //vat         : number
+  //discount    : number
+  //qty         : number
+  //amount      : number
+  //void        : boolean
 
   constructor(private cartService : CartService, private httpClient : HttpClient) { }
 
@@ -79,14 +82,17 @@ export class GeneralComponent implements OnInit {
          this.till = till
          if(await this.isCartAvailable(till) == true){
            if(await this.isEmpty(till) == true){
-             this.destroyCart(till)
-             this.createCart(till)
+             await this.destroyCart(till)
+             await this.createCart(till)
            }
          }else{
-           this.createCart(till)
+           await this.createCart(till)
          }
          var cart = await this.loadCart(till)
+         var cartDetails = await this.loadCartDetails(cart)
          this.cart = cart
+         this.cartDetails = cartDetails
+         console.log(cart)
        }else{
          alert('Could not load till information')
        }
@@ -185,8 +191,7 @@ export class GeneralComponent implements OnInit {
     )
     .catch(
       error => {
-        console.log(error()
-        )
+        console.log(error)
       }
     )
   }
@@ -226,46 +231,77 @@ export class GeneralComponent implements OnInit {
      )
      return cart
    }
+   async loadCartDetails(cart : Cart) : Promise<CartDetail[]>{
+    var cartDetails : CartDetail [] = []
+    var details = null
+    await this.httpClient.get(Data.baseUrl+"/cart_details/cart_id="+cart.id).toPromise()
+    .then(
+      data => {
+        details = data
+      }
+    )
+    .catch(
+      error => {
+        console.log(error)
+        cartDetails = null
+      }
+    )
+    if(details != null){
+      for(let detail of details){
+        var cartDetail : CartDetail = new CartDetail()
+        cartDetail.id = detail['id']
+        cartDetail.barcode = detail['barcode']
+        cartDetail.itemCode = detail['itemCode']
+        cartDetail.description = detail['description']
+        cartDetail.price = detail['price']
+        cartDetail.discount = detail['discount']
+        cartDetail.quantity = detail['quantity']
+        cartDetail.vat = detail['vat']
+        cartDetail.voided = detail['voided']
+        cartDetails.push(cartDetail)
+      }
+    }
+    return cartDetails
+  }
 
 
   
   clear(){
-    this.itemId = ''
-    this.barcode ='' 
-    this.itemCode  =''
-    this.description ='' 
-    this.price = null
-    this.vat =null
-    this.discount =null
-    this.qty =null
-    this.amount =null
-    this.void = false
+    this.cartDetail.barcode ='' 
+    this.cartDetail.itemCode  =''
+    this.cartDetail.description ='' 
+    this.cartDetail.price = null
+    this.cartDetail.vat =null
+    this.cartDetail.discount =null
+    this.cartDetail.quantity =null
+    this.cartDetail.amount =null
+    this.cartDetail.voided = false
   }
   searchByBarcode(value : any){
-    this.itemCode =''
-    this.description = ''
-    this.price=null
-    this.vat=null
-    this.discount=null
-    this.qty=null
+    this.cartDetail.itemCode =''
+    this.cartDetail.description = ''
+    this.cartDetail.price=null
+    this.cartDetail.vat=null
+    this.cartDetail.discount=null
+    this.cartDetail.quantity=null
     this.searchItem(value, '', '')
   }
   searchByItemCode(value : any){
-    this.barcode =''
-    this.description = ''
-    this.price=null
-    this.vat=null
-    this.discount=null
-    this.qty=null
+    this.cartDetail.barcode =''
+    this.cartDetail.description = ''
+    this.cartDetail.price=null
+    this.cartDetail.vat=null
+    this.cartDetail.discount=null
+    this.cartDetail.quantity=null
     this.searchItem('', value, '')
   }
   searchByDescription(value : any){
-    this.barcode =''
-    this.itemCode =''
-    this.price=null
-    this.vat=null
-    this.discount=null
-    this.qty=null
+    this.cartDetail.barcode =''
+    this.cartDetail.itemCode =''
+    this.cartDetail.price=null
+    this.cartDetail.vat=null
+    this.cartDetail.discount=null
+    this.cartDetail.quantity=null
     this.searchItem('', '', value)
   }
 
@@ -280,73 +316,78 @@ export class GeneralComponent implements OnInit {
 		var itemId = await (new ItemService(this.httpClient).getItemId(barcode , itemCode, description))
 		if(itemId != '' && itemId !=null){
       var item = await (new ItemService(this.httpClient).getItem(itemId))
-      this.itemId = itemId
       found = true
       if(barcode != ''){
-        this.barcode = item['primaryBarcode']
+        this.cartDetail.barcode = item['primaryBarcode']
       }
-			this.itemCode = item['itemCode']
-			this.description = item['longDescription']
-      this.price = item['unitRetailPrice']
-      this.vat = item['vat']
-      this.discount = item['discount']
-      this.qty = 1
+			this.cartDetail.itemCode = item['itemCode']
+			this.cartDetail.description = item['longDescription']
+      this.cartDetail.price = item['unitRetailPrice']
+      this.cartDetail.vat = item['vat']
+      this.cartDetail.discount = item['discount']
+      this.cartDetail.quantity = 1
 		}else{
       /** */
       found = false
-      this.itemId = ''
     }
     if(found == true){
-      this.postDetail('', this.itemId, this.barcode, this.itemCode, this.description, this.price, this.vat, this.discount, this.qty)
+      console.log(this.cart)
+      var detail = await this.postDetail('', this.cart, this.cartDetail.barcode, this.cartDetail.itemCode, this.cartDetail.description, this.cartDetail.price, this.cartDetail.vat, this.cartDetail.discount, this.cartDetail.quantity)
+      if(detail != null){
+        this.pushDetail(detail)
+      }
     }
   }
-  async postDetail(detailId : any, itemId : any,barcode : any, itemCode : string, description : string, price : number, vat : number, discount : number, qty : number){
+  async postDetail(detailId : any, cart : Cart, barcode : any, itemCode : string, description : string, price : number, vat : number, discount : number, quantity : number) : Promise<CartDetail>{
+    
     var detail = new CartDetail()
-    detail.cart.id = this.cart.id
-    detail.itemId = itemId
+    detail.cart = cart
     detail.itemCode = itemCode
     detail.description = description
     detail.price = price
     detail.vat = vat
     detail.discount = discount
-    detail.qty = qty
+    detail.quantity = quantity
+
+    
+
    await this.httpClient.post(Data.baseUrl+"/cart_details", detail)
    .toPromise()
    .then(
      data => {
-       var id = data['id']
-       this.pushDetail(id, itemId, barcode, itemCode, description, price, vat, discount, qty)
+       detail.id = data['id']
+       detail.cart = data['cart']
+       detail.item = data['item']
+       detail.itemCode = data['itemCode']
+       detail.description = data['description']
+       detail.price = data['price']
+       detail.vat = data['vat']
+       detail.discount = data['discount']
+       detail.quantity = data['quantity']
      }
    )
    .catch(
      error => {
+       console.log(error)
+       
+       detail = null
        this.rollBackCart()
      }
    )
-
+   return detail
   }
-  pushDetail(detailId : any, itemId : any, barcode : any, itemCode : string, description : string, price : number, vat : number, discount : number, qty : number){
+  pushDetail(detail : CartDetail){
     /**
      * Puts the current item to cart
      * If similar item s present in the cart, with the same state, ie, not voided
      * increment, otherwise, adds the item to cart
      */
-    var detail : CartDetail = new CartDetail()
-    detail.id = detailId
-    detail.itemId = itemId
-    detail.barcode = barcode
-    detail.itemCode = itemCode
-    detail.description = description
-    detail.price = price
-    detail.vat = vat
-    detail.qty = qty
-    detail.void = false
-
+    detail.voided = false
     var present : boolean = false
     for(let cartDetail of this.cartDetails){
       if(cartDetail.id == detail.id){
         //increment qty
-        cartDetail.qty = cartDetail.qty + detail.qty
+        cartDetail.quantity = cartDetail.quantity + detail.quantity
         present = true
         break
       }
@@ -424,13 +465,14 @@ class CartDetail{
   cart : Cart
   itemCode : any
   barcode : any
-  itemId : any
+  item : Item
   description : any
   price : any
   vat : any
   discount : any
-  qty : any
-  void : boolean
+  quantity : any
+  amount : any
+  voided : boolean
 }
 /**
  * Sale class
@@ -444,4 +486,8 @@ class Sale {
  */
 class SaleDetail {
 
+}
+
+class Item{
+  id : any
 }

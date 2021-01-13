@@ -49,7 +49,7 @@
                                 <td><input [(ngModel)]="detail.price" readonly type="text" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
                                 <td><input [(ngModel)]="detail.vat" readonly type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
                                 <td><input [(ngModel)]="detail.discount" readonly type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input [(ngModel)]="detail.qty" type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input [(ngModel)]="detail.quantity" type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
                                 <td style="text-align: right; width: 25mm;">{{detail.amount|currency:'TSh':''}}</td>
                                 <td><input [(ngModel)]="detail.void" type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
                             </tr>
@@ -74,7 +74,7 @@
                                 <td><input readonly type="text" [(ngModel)]="price" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
                                 <td><input readonly type="text" [(ngModel)]="vat" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
                                 <td><input readonly type="text" [(ngModel)]="discount" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input type="text" [(ngModel)]="quantity" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
                                 <td style="text-align: right; width: 25mm;"></td>
                                 <td><input type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
                             </tr>
