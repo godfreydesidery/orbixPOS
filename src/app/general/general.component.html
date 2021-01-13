@@ -24,7 +24,7 @@
         <table style="width: 100%;">
             <tr>
                 <td style="vertical-align: top;">
-                    <table class="table-bordered" style="font-size: 13px;display: block; height: 14cm; width: 100%; overflow-y: auto;overflow-x: auto;">
+                    <table datatable class="table-bordered" style="font-size: 13px;display: block; height: 14cm; width: 100%; overflow-y: auto;overflow-x: auto;">
                         <thead>
                             <tr style="background-color: blanchedalmond;">
                                 <td style="position: sticky; top: 0; background-color: blanchedalmond;"><b>SN</b></td>
@@ -41,7 +41,7 @@
                         </thead>
 
                         <tbody>
-                            <tr *ngFor="let detail of cartDetails" [ngValue]="detail" style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
+                            <tr *ngFor="let detail of cartDetails" [ngValue]="detail" style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid; background-color: rgb(242, 247, 247);">
                                 <td style="background-color: rgb(187, 183, 183);">01></td>
                                 <td><input [(ngModel)]="detail.barcode" readonly  type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
                                 <td><input [(ngModel)]="detail.itemCode" readonly type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
@@ -50,7 +50,7 @@
                                 <td><input [(ngModel)]="detail.vat" readonly type="text" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
                                 <td><input [(ngModel)]="detail.discount" readonly type="text" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
                                 <td><input [(ngModel)]="detail.quantity" type="text" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td style="text-align: right; width: 25mm;">{{detail.amount|currency:'TSh':''}}</td>
+                                <td style="text-align: right; width: 35mm; font: caption;">{{detail.amount|currency:'TSh':''}}</td>
                                 <td><input [(ngModel)]="detail.void" type="checkbox" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
                             </tr>
                             <tr style="height: 3px; background-color: grey;">
@@ -75,8 +75,8 @@
                                 <td><input readonly type="text" [(ngModel)]="vat" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
                                 <td><input readonly type="text" [(ngModel)]="discount" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
                                 <td><input type="text" [(ngModel)]="quantity" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;" (keydown.enter)="addToCart()"></td>
-                                <td style="text-align: right; width: 25mm;"></td>
-                                <td style="text-align: center;"><button style="width: 5mm; height: 5mm; text-align: center;" (click)="clear()">X</button></td>
+                                <td style="text-align: right; width: 35mm;"></td>
+                                <td style="text-align: center;"><button class="btn btn-dark" style="width: 5mm; height: 5mm; text-align: center; padding: 0px; border-radius: 10px;" (click)="clear()">C</button></td>
                             </tr>
                         </tbody>
                         
@@ -89,34 +89,34 @@
                 <td style="vertical-align: top; align-content: right;">
                     <table>
                         <tr>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">1</button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">2</button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">3</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">1</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">2</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">3</button></td>
                         </tr>
                         <tr>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">4</button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">5</button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">6</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">4</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">5</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">6</button></td>
                         </tr>
                         <tr>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">7</button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">8</button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">9</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">7</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">8</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">9</button></td>
                         </tr>
                         <tr>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary">0</button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-dark"><span class="fa fa-angle-up fa-1x"></span></button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-primary"><span>. </span> </button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary">0</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-dark"><span class="fa fa-angle-up fa-1x"></span></button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-primary"><span>. </span> </button></td>
                         </tr>
                         <tr>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-dark"><span class="fa fa-angle-left fa-1x"></span></button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-success"><span class="glyphicon glyphicon-remove"></span>OK</button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-dark"><span class="fa fa-angle-right fa-1x"></span></button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-dark"><span class="fa fa-angle-left fa-1x"></span></button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-success"><span class="glyphicon glyphicon-remove"></span>OK</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-dark"><span class="fa fa-angle-right fa-1x"></span></button></td>
                         </tr>
                         <tr>
-                            <td><button style="height: 2cm; width: 2cm;" type="button" class="btn btn-danger">CE</button></td>
-                            <td><button style="height: 2cm; width: 2cm;"type="button" class="btn btn-dark"><span class="fa fa-angle-down fa-1x"></span></button></td>
-                            <td><button style="height: 2cm; width: 2cm;" type="button" class="btn btn-warning">C</button></td>
+                            <td><button style="height: 15mm; width: 15mm;" type="button" class="btn btn-danger">CE</button></td>
+                            <td><button style="height: 15mm; width: 15mm;"type="button" class="btn btn-dark"><span class="fa fa-angle-down fa-1x"></span></button></td>
+                            <td><button style="height: 15mm; width: 15mm;" type="button" class="btn btn-warning">C</button></td>
                         </tr>
                     </table>
                 </td>

@@ -261,6 +261,7 @@ export class GeneralComponent implements OnInit {
         cartDetail.quantity = detail['quantity']
         cartDetail.vat = detail['vat']
         cartDetail.voided = detail['voided']
+        cartDetail.amount = cartDetail.quantity*cartDetail.price*((100 - cartDetail.discount)/100)
         cartDetails.push(cartDetail)
       }
     }
@@ -324,6 +325,8 @@ export class GeneralComponent implements OnInit {
       found = true
       if(barcode != ''){
         this.cartDetail.barcode = item['primaryBarcode']
+      }else{
+        this.cartDetail.barcode = ''
       }
 			this.cartDetail.itemCode = item['itemCode']
 			this.cartDetail.description = item['longDescription']
@@ -375,6 +378,7 @@ export class GeneralComponent implements OnInit {
     
     var detail = new CartDetail()
     detail.cart = cart
+    detail.barcode =barcode
     detail.itemCode = itemCode
     detail.description = description
     detail.price = price
@@ -390,6 +394,7 @@ export class GeneralComponent implements OnInit {
      data => {
        detail.id = data['id']
        detail.cart = data['cart']
+       detail.barcode = data['barcode']
        detail.item = data['item']
        detail.itemCode = data['itemCode']
        detail.description = data['description']
@@ -397,9 +402,7 @@ export class GeneralComponent implements OnInit {
        detail.vat = data['vat']
        detail.discount = data['discount']
        detail.quantity = data['quantity']
-       console.log(data['price'])
-       console.log(data['quantity'])
-       detail = detail
+       detail.amount = detail.quantity*detail.price*((100 - detail.discount)/100)
        console.log(detail)
 
        this.pushDetail(detail)
@@ -431,6 +434,7 @@ export class GeneralComponent implements OnInit {
     for(let cartDetail of this.cartDetails){
       if(cartDetail.id == detail.id){
         cartDetail.quantity = detail.quantity
+        cartDetail.amount = cartDetail.quantity*cartDetail.price*((100 - cartDetail.discount)/100)
         present = true
         break
       }
