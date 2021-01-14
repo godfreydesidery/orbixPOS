@@ -13,7 +13,7 @@
                 <td><button type="button" class="btn btn-primary"><span class="fa fa-bitbucket"></span> Hold</button></td>
                 <td><button type="button" class="btn btn-primary"><span class="fa fa-bitbucket-square"></span> View Held</button></td>
                 <td><button type="button" class="btn btn-primary"><span class="fa fa-expeditedssl"></span> Lock/Unlock</button></td>
-                <td><button type="button" class="btn btn-dark"><input id="c" type="checkbox" checked data-toggle="toggle"> Multiple Input</button></td>
+                <td><button type="button" class="btn btn-dark"><input id="c" type="checkbox" [(ngModel)]="multipleInput" (click)="setMultipleInput(tillName,multipleInput)" checked data-toggle="toggle"> Multiple Input</button></td>
             </tr>
         </table>
     </div>
@@ -24,7 +24,7 @@
         <table style="width: 100%;">
             <tr>
                 <td style="vertical-align: top;">
-                    <table datatable class="table-bordered" style="font-size: 13px;display: block; height: 14cm; width: 100%; overflow-y: auto;overflow-x: auto;">
+                    <table datatable class="table-bordered" style="font-size: 13px;display: block; height: 14cm; width: 100%; overflow-y: scroll;overflow-x: auto; scroll-behavior: smooth;" id="table">
                         <thead>
                             <tr style="background-color: blanchedalmond;">
                                 <td style="position: sticky; top: 0; background-color: blanchedalmond;"><b>SN</b></td>
@@ -40,7 +40,7 @@
                             </tr>
                         </thead>
 
-                        <tbody>
+                        <tbody >
                             <tr *ngFor="let detail of cartDetails" [ngValue]="detail" style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid; background-color: rgb(242, 247, 247);">
                                 <td style="background-color: rgb(187, 183, 183);">01></td>
                                 <td><input [(ngModel)]="detail.barcode" readonly  type="text" style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>

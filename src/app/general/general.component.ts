@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
+import { ViewChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../cart.service';
 import { Data } from '../data';
 import { ItemService } from '../item.service';
 
-declare var $: any;
 
 @Component({
   selector: 'app-general',
@@ -13,13 +14,13 @@ declare var $: any;
 })
 export class GeneralComponent implements OnInit {
 
-  addMany : boolean = true
 
  public descriptions : any = []
 
   /**
    * Till information
    */
+  multipleInput : boolean = false
   till : Till = new Till()
 
   tillName : string = 'SANILI TILL 1'
@@ -27,6 +28,7 @@ export class GeneralComponent implements OnInit {
   /**
    * Cart information
    */
+  
   public cart : Cart = new Cart()
 
   public item : Item = new Item()
@@ -47,7 +49,7 @@ export class GeneralComponent implements OnInit {
 
 
 
-  computerName : string = 'SANILI TILL 1'
+  computerName : string = "SANILI TILL 1"
 
 
 
@@ -67,7 +69,7 @@ export class GeneralComponent implements OnInit {
   amount      : number
   voided      : boolean
 
-  constructor(private cartService : CartService, private httpClient : HttpClient) { }
+  constructor(private httpClient : HttpClient) { }
 
   async ngOnInit(): Promise<void> {
     
@@ -106,21 +108,38 @@ export class GeneralComponent implements OnInit {
      }
 
      this.loadItemDescriptions()
-
+    
+  }
+  setMultipleInput(tillName : string, multipleValue : boolean) : void{
+    if(multipleValue == false){
+      multipleValue = true
+    }else{
+      multipleValue = false
+    }
+    this.httpClient.post(Data.baseUrl+"/tills/multiple_input/till_name="+tillName, multipleValue)
+    .toPromise()
+    .then()
+    .catch(
+      error => {
+        console.log(error)
+      }
+    )
   }
   async loadTill(tillName) : Promise<Till>{
     var till : Till = new Till()
     await this.httpClient.get(Data.baseUrl+"/tills/till_name="+tillName).toPromise()
     .then(
       data => {
-        till.id       = data['id']
-        till.tillNo   = data['tillNo']
-        till.tillName = data['tillName']
-        till.status   = data['status']
+        till.id              = data['id']
+        till.tillNo          = data['tillNo']
+        till.tillName        = data['tillName']
+        till.status          = data['status']
+        till.multipleInput   = data['multipleInput']
+        this.multipleInput   = till.multipleInput
       }
     )
     .catch(
-      error => {
+      () => {
         till = null
       }
     )
@@ -140,7 +159,7 @@ export class GeneralComponent implements OnInit {
       }
     )
     .catch(
-      error => {
+      () => {
         alert('Network error1')
         available = false
       }
@@ -162,7 +181,7 @@ export class GeneralComponent implements OnInit {
       }
     )
     .catch(
-      error => {
+      () => {
         available = false
       }
     )
@@ -178,7 +197,7 @@ export class GeneralComponent implements OnInit {
       }
     )
     .catch(
-      error => {
+      () => {
         empty = false
       }
     )
@@ -188,7 +207,7 @@ export class GeneralComponent implements OnInit {
   async destroyCart(till : Till) : Promise<void>{
     await this.httpClient.delete(Data.baseUrl+"/carts/destroy/till_no="+till.tillNo).toPromise()
     .then(
-      data => {
+      () => {
 
       }
     )
@@ -228,7 +247,7 @@ export class GeneralComponent implements OnInit {
        }
      )
      .catch(
-       error => {
+       () => {
          cart = null
        }
      )
@@ -352,12 +371,13 @@ export class GeneralComponent implements OnInit {
       found = false
     }
     if(found == true){
-      if(this.addMany == false){
+      if(this.multipleInput == false){
+        this.quantity = 1
         this.addToCart()
       }
     }
   }
-  validateInputs(cartDetail : CartDetail) : boolean{
+  validateInputs() : boolean{
     var valid : boolean = true
     if(this.quantity <= 0 || isNaN(this.quantity) || this.quantity % 1 !=0){
       valid = false
@@ -367,14 +387,14 @@ export class GeneralComponent implements OnInit {
     return valid
   }
   async addToCart(){
-    if(this.validateInputs(this.cartDetail) == false){
+    if(this.validateInputs() == false){
       return;
     }
     if(this.itemId != null){
-      await this.postDetail('', this.cart, this.cartDetail.barcode, this.cartDetail.itemCode, this.cartDetail.description, this.cartDetail.price, this.cartDetail.vat, this.cartDetail.discount, this.quantity)
+      await this.postDetail(this.cart, this.cartDetail.barcode, this.cartDetail.itemCode, this.cartDetail.description, this.cartDetail.price, this.cartDetail.vat, this.cartDetail.discount, this.quantity)
     }
   }
-  async postDetail(detailId : any, cart : Cart, barcode : any, itemCode : string, description : string, price : number, vat : number, discount : number, quantity : number) : Promise<CartDetail>{
+  async postDetail(cart : Cart, barcode : any, itemCode : string, description : string, price : number, vat : number, discount : number, quantity : number) : Promise<CartDetail>{
     
     var detail = new CartDetail()
     detail.cart = cart
@@ -475,12 +495,20 @@ export class GeneralComponent implements OnInit {
       }
     )
     .catch(
-      error=>{}
+      ()=>{}
     )
     Object.values(values).map((data)=>{
       this.descriptions.push(data)
     })
   }
+
+
+
+  
+
+  
+
+
 
 }
 /**
@@ -492,6 +520,7 @@ class Till {
   tillName     : string
   computerName : string
   status       : string
+  multipleInput : boolean
 
 }
 /**
@@ -522,19 +551,7 @@ class CartDetail{
   amount : any
   voided : boolean
 }
-/**
- * Sale class
- */
-class Sale {
 
-}
-
-  /**
- * Sale detail class
- */
-class SaleDetail {
-
-}
 
 class Item{
   id : any
