@@ -68,13 +68,13 @@
                             </tr>
                             <tr style="border-color: rgb(71, 69, 69); border-width: 1px;border-style: solid;">
                                 <td style="background-color: rgb(187, 183, 183);">-></td>
-                                <td><input type="text" [(ngModel)]="barcode" (keydown.enter)="searchByBarcode(barcode)"  style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" [(ngModel)]="itemCode" (keydown.enter)="searchByItemCode(itemCode)"  style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
-                                <td><input type="text" [(ngModel)]="description" list="description" (keydown.enter)="searchByDescription(description)" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input type="text" #bcd [(ngModel)]="barcode" (keydown.enter)="searchByBarcode(barcode)"  style="width: 40mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input type="text" #icd [(ngModel)]="itemCode" (keydown.enter)="searchByItemCode(itemCode)"  style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
+                                <td><input type="text" #des [(ngModel)]="description" list="description" (keydown.enter)="searchByDescription(description)" style="width: 120mm; font-size: 14px; padding: 0px; border-width: 0px;"></td>
                                 <td><input readonly type="text" [(ngModel)]="price" style="width: 30mm; font-size: 14px; padding: 0px; text-align: right; border-width: 0px;"></td>
                                 <td><input readonly type="text" [(ngModel)]="vat" style="width: 15mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
                                 <td><input readonly type="text" [(ngModel)]="discount" style="width: 20mm; font-size: 14px; padding: 0px; border-width: 0px; text-align: center;"></td>
-                                <td><input type="text" [(ngModel)]="quantity" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;" (keydown.enter)="addToCart()"></td>
+                                <td><input type="text" #qty [(ngModel)]="quantity" style="width: 30mm; font-size: 14px; padding: 0px; border-width: 0px;" (keydown.enter)="addToCart()"></td>
                                 <td style="text-align: right; width: 35mm;"></td>
                                 <td style="text-align: center;"><button class="btn btn-dark" style="width: 5mm; height: 5mm; text-align: center; padding: 0px; border-radius: 10px;" (click)="clear()">C</button></td>
                             </tr>

@@ -69,6 +69,15 @@ export class GeneralComponent implements OnInit {
   amount      : number
   voided      : boolean
 
+  /**
+   *  Elements to auto focus
+   */
+  @ViewChild('bcd') barcodeElement : ElementRef
+  @ViewChild('icd') itemCodelement : ElementRef
+  @ViewChild('des') descriptionElement : ElementRef
+  @ViewChild('qty') quantityElement : ElementRef
+  
+
   constructor(private httpClient : HttpClient) { }
 
   async ngOnInit(): Promise<void> {
@@ -369,11 +378,15 @@ export class GeneralComponent implements OnInit {
 		}else{
       /** */
       found = false
+      this.clear()
     }
     if(found == true){
       if(this.multipleInput == false){
         this.quantity = 1
         this.addToCart()
+      }else{
+        //set focus to qty
+        this.setFocus(this.quantityElement)
       }
     }
   }
@@ -386,6 +399,8 @@ export class GeneralComponent implements OnInit {
 
     return valid
   }
+
+
   async addToCart(){
     if(this.validateInputs() == false){
       return;
@@ -393,6 +408,11 @@ export class GeneralComponent implements OnInit {
     if(this.itemId != null){
       await this.postDetail(this.cart, this.cartDetail.barcode, this.cartDetail.itemCode, this.cartDetail.description, this.cartDetail.price, this.cartDetail.vat, this.cartDetail.discount, this.quantity)
     }
+    //set focus to barcode input
+    this.setFocus(this.barcodeElement)
+  }
+  setFocus(element : ElementRef){
+    element.nativeElement.focus()
   }
   async postDetail(cart : Cart, barcode : any, itemCode : string, description : string, price : number, vat : number, discount : number, quantity : number) : Promise<CartDetail>{
     
