@@ -539,3 +539,4 @@ class SaleDetail {
 class Item{
   id : any
 }
+
